@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "./Name.css";
+import store, {UPDATE_NAME, UPDATE_CATEGORY} from '../../store'
 
 class Name extends Component {
   constructor(props) {
     super(props);
+    // when we hit next button, and then the previous button, the input boxes forget what we typed in, so we need to hook up Name.js
+    //to use Redux state to remember.
+    const reduxState = store.getState();
     this.state = {
-      name: '',
-      category: ''
+      name:reduxState.recipeName,
+      category:reduxState.recipeCategory,
     };
   }
   handleNameChange(nameVal) {
@@ -15,14 +19,25 @@ class Name extends Component {
       name: nameVal
     });
   }
-
   handleCategoryChange(catVal) {
     this.setState({
       category: catVal
     });
   }
-  saveChanges() {
+  saveChanges(e) {
     // Send data to Redux state
+    let nameAction = {
+      type: UPDATE_NAME,
+      payload: this.state.name
+    }
+ 
+    let categoryAction={
+      type: UPDATE_CATEGORY,
+      payload: this.state.category
+    }
+    store.dispatch(nameAction);
+    store.dispatch(categoryAction)
+
   }
   render() {
     return (
